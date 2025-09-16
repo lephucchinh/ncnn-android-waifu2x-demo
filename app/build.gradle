@@ -45,6 +45,10 @@ android {
             path file('src/main/jni/CMakeLists.txt')
         }
     }
+
+    kotlin {
+        jvmToolchain(8)
+    }
 }
 repositories {
     mavenCentral()

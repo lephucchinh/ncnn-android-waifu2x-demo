@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -34,7 +35,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.lang.Integer.min
 
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
     private var imageView: ImageView? = null
     private var bitmap: Bitmap? = null
     private var yourSelectedImage: Bitmap? = null
@@ -116,9 +117,9 @@ class MainActivity : Activity() {
         upscaler.init(
             assets,
             useGPU,
-            "models-upconv_7_anime_style_art_rgb",
+            "models-upconv_7_photo",
             2,
-            -1,
+            0,
             false,
             numThreads,
             0,

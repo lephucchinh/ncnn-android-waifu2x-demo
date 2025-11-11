@@ -6,38 +6,45 @@ ext.getVersionCode = { base ->
         providers.exec {
             commandLine 'git', 'rev-list', '--count', base + '..HEAD'
         }.standardOutput.asText.get().toInteger()
-    } catch(ignored) {
+    } catch (ignored) {
         10
     }
 }
 
 android {
     namespace 'pro.archiemeng.waifu2x'
-    compileSdkVersion 34
-    ndkVersion '25.1.8937393'
-
+    compileSdkVersion 35
+    ndkVersion '26.2.11394342'
     defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 35
         applicationId "pro.archiemeng.waifu2x"
         archivesBaseName = "$applicationId"
 
+        minSdkVersion 24
+        versionCode project.getVersionCode('665576c24caee5bca1bf4d8149223dccacbdd979')
+        versionName "0.0.${project.getVersionCode('665576c24caee5bca1bf4d8149223dccacbdd979')}"
+
         ndk {
-            moduleName "ncnn"
             abiFilters "armeabi-v7a", "arm64-v8a", "x86_64"
         }
 
-        // Change here to choose the type of ncnn integration
         externalNativeBuild {
             cmake {
-                arguments "-DUSE_PREBUILT_NCNN=OFF", "-DUSE_SHARED_NCNN=OFF", "-DNCNN_VULKAN=ON"
+                arguments "-DUSE_PREBUILT_NCNN=ON", "-DUSE_SHARED_NCNN=OFF", "-DNCNN_VULKAN=ON"
             }
         }
+    }
 
-        // calculate commits number from initial commit
-        versionCode project.getVersionCode('665576c24caee5bca1bf4d8149223dccacbdd979')
-        // calculate commits number from version 1.1 commit
-        versionName '0.0.' + project.getVersionCode('665576c24caee5bca1bf4d8149223dccacbdd979')
+    // 👇 Thêm block này để Gradle/AGP hiểu rằng project build bằng JDK 17
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
 
-        minSdkVersion 24
+    // 👇 Kotlin JVM toolchain cũng dùng JDK 17 (chuẩn cho Android 15)
+    kotlin {
+        jvmToolchain(17)
     }
 
     externalNativeBuild {
@@ -46,17 +53,24 @@ android {
         }
     }
 
-    kotlin {
-        jvmToolchain(8)
+    // 👇 Giúp build ổn định hơn trên Android 15 (AGP 8.2+)
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = false
+        }
     }
 }
+
 repositories {
     mavenCentral()
 }
+
 dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    def coroutinesVersion = "1.7.3"   // cập nhật bản mới tương thích JDK 17
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9"
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 }

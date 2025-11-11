@@ -85,11 +85,12 @@ class Waifu2x : Processor {
             modelPath = "${model}/scale2.0x_model.bin"
         } else if (scale == 1) {
             paramPath = "${model}/noise${noise}_model.param"
-            modelPath = "${model}/noise${noise}_model.param"
+            modelPath = "${model}/noise${noise}_model.bin"
         } else {
             paramPath = "${model}/noise${noise}_scale2.0x_model.param"
-            modelPath = "${model}/noise${noise}_scale2.0x_model.param"
+            modelPath = "${model}/noise${noise}_scale2.0x_model.bin"
         }
+
         this.RawLoad(assetManager, paramPath, modelPath)
     }
 

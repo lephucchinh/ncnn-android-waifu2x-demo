@@ -119,10 +119,10 @@ class MainActivity : AppCompatActivity() {
             useGPU,
             "models-upconv_7_photo",
             2,
-            0,
+            -1,
             false,
             numThreads,
-            0,
+            128,
         )
 
         if (!upscaler.useGPU)
